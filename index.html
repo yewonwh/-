@@ -915,7 +915,6 @@
             <div class="legend-grid" id="myLegendGrid"></div>
           </div>
         </div>
-
         <div class="result-grid">
           <div class="result-item">
             <b>전기</b>
@@ -1018,7 +1017,7 @@
 
     const totalCarbon = document.getElementById("totalCarbon");
     
-    // 새롭게 추가된 요소들
+    // 나의 탄소 배출량 원형 그래프 요소들
     const myDonutChart = document.getElementById("myDonutChart");
     const myDonutTotal = document.getElementById("myDonutTotal");
     const myLegendGrid = document.getElementById("myLegendGrid");
@@ -1124,7 +1123,7 @@
       }).join("");
     }
 
-    // 내 사용량 원형 그래프 렌더링 함수 추가
+    // ⭐ 나의 탄소 배출량 원형 그래프 그리는 함수 ⭐
     function renderMyDonutChart(carbons, total) {
       if (total === 0) {
         myDonutChart.style.background = "#e4f0ec";
@@ -1349,7 +1348,7 @@
 
       totalCarbon.textContent = formatNumber(total);
       
-      // 내 원형 그래프 업데이트 호출
+      // 내 원형 그래프 그리기 호출
       renderMyDonutChart(carbons, total);
 
       electricityResult.textContent = formatNumber(carbons.electricity);
