@@ -28,7 +28,7 @@
 
     .container {
       width: 100%;
-      max-width: 1080px;
+      max-width: 1120px;
     }
 
     .card {
@@ -66,7 +66,7 @@
     }
 
     .header p {
-      max-width: 780px;
+      max-width: 820px;
       margin: 0 auto;
       font-size: 16px;
       line-height: 1.7;
@@ -99,6 +99,161 @@
       font-size: 13px;
       color: #68847d;
       line-height: 1.45;
+    }
+
+    .data-panel {
+      margin-bottom: 30px;
+      padding: 26px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, #f4fff8, #f2f9ff);
+      border: 1px solid #d9eee6;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .panel-head h2 {
+      color: #0f4c3a;
+      font-size: 22px;
+    }
+
+    .panel-head p {
+      margin-top: 5px;
+      color: #647d76;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .year-select {
+      min-width: 130px;
+      border: 1.5px solid #cfe5dd;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #ffffff;
+      color: #24574c;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #dcefe7;
+      border-radius: 20px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stat-card small {
+      display: block;
+      color: #68847d;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-card strong {
+      display: block;
+      color: #128256;
+      font-size: 23px;
+      margin-bottom: 5px;
+    }
+
+    .stat-card span {
+      color: #7b918b;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .bar-box {
+      background: #ffffff;
+      border: 1px solid #dcefe7;
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .bar-box h3 {
+      font-size: 17px;
+      color: #24574c;
+      margin-bottom: 15px;
+    }
+
+    .bar-item {
+      margin-bottom: 14px;
+    }
+
+    .bar-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #4f6d66;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #e8f3ef;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #20c779, #1e9bff);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: #ffffff;
+      border: 1px solid #dcefe7;
+      border-radius: 22px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #e4f0ec;
+      padding: 12px 10px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #eaf8f5;
+      color: #174b3f;
+      font-weight: 900;
+    }
+
+    td:first-child,
+    th:first-child {
+      text-align: left;
+      font-weight: 900;
+      color: #24574c;
+      background: #f8fbfa;
     }
 
     form {
@@ -457,7 +612,7 @@
       color: #7b918b;
     }
 
-    @media (max-width: 820px) {
+    @media (max-width: 860px) {
       body {
         align-items: flex-start;
         padding: 24px 14px;
@@ -471,8 +626,18 @@
       .info-box,
       .section-grid,
       .result-grid,
-      .compare-grid {
+      .compare-grid,
+      .stat-grid {
         grid-template-columns: 1fr;
+      }
+
+      .panel-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .year-select {
+        width: 100%;
       }
 
       .form-section {
@@ -496,11 +661,11 @@
   <main class="container">
     <section class="card">
       <div class="header">
-        <div class="badge">🌱 공식 자료 기반 탄소 계산 프로젝트</div>
+        <div class="badge">🌱 공식 통계 기반 탄소 계산 프로젝트</div>
         <h1>우리 동네 탄소 발자국 계산기</h1>
         <p>
-          본 계산기는 환경부·온실가스종합정보센터·한국가스공사 등 공식 기관의 자료를 바탕으로,
-          가정의 전기·도시가스·교통 이용에 따른 온실가스 배출량을 추정합니다.
+          전기, 도시가스, 대중교통, 자가용 사용량을 입력하면 월간 온실가스 배출량을 계산하고,
+          2013~2023년 국가 온실가스 통계와 함께 나의 탄소 발자국을 비교할 수 있습니다.
         </p>
       </div>
 
@@ -516,10 +681,34 @@
         </div>
 
         <div class="info-item">
-          <strong>96.5%</strong>
-          <span>2022년 수송 부문 중<br />도로수송 비중</span>
+          <strong>13.7톤</strong>
+          <span>2023년 1인당<br />온실가스 배출량</span>
         </div>
       </div>
+
+      <section class="data-panel">
+        <div class="panel-head">
+          <div>
+            <h2>대한민국 온실가스 배출 현황</h2>
+            <p>
+              선택한 연도의 총배출량, 에너지 부문, GDP 대비 배출량, 1인당 배출량을 확인할 수 있습니다.
+            </p>
+          </div>
+
+          <select id="yearSelect" class="year-select"></select>
+        </div>
+
+        <div class="stat-grid" id="nationalStatGrid"></div>
+
+        <div class="bar-box">
+          <h3>선택 연도 부문별 배출량 비중</h3>
+          <div id="sectorBars"></div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="nationalTable"></table>
+        </div>
+      </section>
 
       <form id="carbonForm">
         <div class="section-grid">
@@ -535,14 +724,7 @@
             <div class="input-group">
               <label for="electricity">전기 사용량</label>
               <div class="input-wrap">
-                <input
-                  type="number"
-                  id="electricity"
-                  min="0"
-                  step="0.1"
-                  placeholder="예: 296"
-                  required
-                />
+                <input type="number" id="electricity" min="0" step="0.1" placeholder="예: 296" required />
                 <span class="unit">kWh</span>
               </div>
             </div>
@@ -550,14 +732,7 @@
             <div class="input-group">
               <label for="gas">도시가스 사용량</label>
               <div class="input-wrap">
-                <input
-                  type="number"
-                  id="gas"
-                  min="0"
-                  step="0.1"
-                  placeholder="예: 30"
-                  required
-                />
+                <input type="number" id="gas" min="0" step="0.1" placeholder="예: 30" required />
                 <span class="unit">m³</span>
               </div>
             </div>
@@ -575,14 +750,7 @@
             <div class="input-group">
               <label for="publicTransport">대중교통 이용 거리</label>
               <div class="input-wrap">
-                <input
-                  type="number"
-                  id="publicTransport"
-                  min="0"
-                  step="0.1"
-                  placeholder="예: 120"
-                  required
-                />
+                <input type="number" id="publicTransport" min="0" step="0.1" placeholder="예: 120" required />
                 <span class="unit">km</span>
               </div>
             </div>
@@ -590,14 +758,7 @@
             <div class="input-group">
               <label for="car">자가용 이용 거리</label>
               <div class="input-wrap">
-                <input
-                  type="number"
-                  id="car"
-                  min="0"
-                  step="0.1"
-                  placeholder="예: 200"
-                  required
-                />
+                <input type="number" id="car" min="0" step="0.1" placeholder="예: 200" required />
                 <span class="unit">km</span>
               </div>
             </div>
@@ -615,9 +776,7 @@
         <div class="total-result">
           <strong id="totalCarbon">0</strong>
           <span>kg CO₂eq / 월</span>
-          <div class="overall-status" id="overallStatus">
-            평균과 비교 결과
-          </div>
+          <div class="overall-status" id="overallStatus">평균과 비교 결과</div>
         </div>
 
         <div class="result-grid">
@@ -660,19 +819,17 @@
       </section>
 
       <section class="source-box">
-        <h3>공식 자료 및 계산 기준</h3>
+        <h3>자료 및 계산 기준</h3>
         <ul>
-          <li>대한민국 온실가스 배출 현황: 온실가스종합정보센터 국가 온실가스 인벤토리 및 국가·지역온실가스통계</li>
-          <li>전기 배출계수: 0.4173 kg CO₂eq/kWh, 2024년 승인 국가 온실가스 배출계수 기준</li>
-          <li>수송 부문 배출 현황: 2022년 수송 부문 배출량 98,502천 톤 CO₂eq, 도로수송 95,093천 톤 CO₂eq, 비중 96.5%</li>
+          <li>2013~2023년 온실가스 총배출량, 에너지, 산업공정, 농업, 폐기물, GDP 대비 배출량, 1인당 배출량 값을 코드에 반영했습니다.</li>
+          <li>전기 배출계수: 0.4173 kg CO₂eq/kWh</li>
           <li>전기 평균 비교 기준: 서울시 가구당 전력소비량 2024년 296kWh/월</li>
-          <li>도시가스 비교 기준: 한국가스공사 공공데이터의 가구당 가정용 도시가스 소비량 자료 활용 가능</li>
-          <li>교통 부문: 국토교통부, 탄소공간지도, 한국교통연구원, 국가 배출계수 자료 참고</li>
+          <li>2023년 1인당 온실가스 배출량 13.7톤 CO₂eq/인을 월 단위로 환산해 전체 결과 비교에 활용했습니다.</li>
         </ul>
 
         <p class="notice">
-          ※ 도시가스, 대중교통, 자가용은 연료 종류, 차량 종류, 연비, 지역, 전력 사용량에 따라 달라질 수 있습니다.
-          따라서 코드 상단의 FACTORS와 AVERAGES 값을 공식 공표 자료에 맞게 수정하면 더 정확한 계산기로 발전시킬 수 있습니다.
+          ※ 도시가스, 대중교통, 자가용 배출계수는 계산 기능 구현을 위한 기본값입니다.
+          실제 공식 산정에서는 연료 종류, 차량 종류, 연비, 지역 등에 따라 달라질 수 있습니다.
         </p>
       </section>
     </section>
@@ -680,47 +837,52 @@
 
   <script>
     /*
-      ================================
-      탄소 배출 계수
-      ================================
+      이미지 표의 2013~2023년 값을 모두 입력한 데이터
+      단위:
+      - total, energy, industrial, agriculture, waste: 백만 톤 CO₂eq.
+      - gdpIntensity: 톤 CO₂eq./십억 원
+      - perCapita: 톤 CO₂eq./인
+    */
+    const NATIONAL_DATA = [
+      { year: 2013, total: 727.5, energy: 572.5, industrial: 111.5, agriculture: 23.8, waste: 19.8, gdpIntensity: 420.0, perCapita: 14.4 },
+      { year: 2014, total: 722.6, energy: 563.9, industrial: 115.6, agriculture: 23.9, waste: 19.2, gdpIntensity: 404.2, perCapita: 14.2 },
+      { year: 2015, total: 725.1, energy: 564.4, industrial: 117.4, agriculture: 23.5, waste: 19.8, gdpIntensity: 394.0, perCapita: 14.2 },
+      { year: 2016, total: 735.6, energy: 575.8, industrial: 116.8, agriculture: 23.4, waste: 19.6, gdpIntensity: 387.4, perCapita: 14.4 },
+      { year: 2017, total: 756.3, energy: 590.8, industrial: 121.9, agriculture: 23.5, waste: 20.2, gdpIntensity: 385.1, perCapita: 14.7 },
+      { year: 2018, total: 780.1, energy: 613.7, industrial: 123.8, agriculture: 23.3, waste: 19.3, gdpIntensity: 385.0, perCapita: 15.1 },
+      { year: 2019, total: 757.2, energy: 590.5, industrial: 124.8, agriculture: 23.1, waste: 18.7, gdpIntensity: 365.3, perCapita: 14.6 },
+      { year: 2020, total: 709.5, energy: 547.5, industrial: 120.6, agriculture: 22.9, waste: 18.5, gdpIntensity: 344.7, perCapita: 13.7 },
+      { year: 2021, total: 739.5, energy: 570.5, industrial: 127.8, agriculture: 22.9, waste: 18.3, gdpIntensity: 343.4, perCapita: 14.3 },
+      { year: 2022, total: 722.0, energy: 555.6, industrial: 125.5, agriculture: 22.8, waste: 18.1, gdpIntensity: 326.4, perCapita: 14.0 },
+      { year: 2023, total: 707.2, energy: 545.0, industrial: 121.5, agriculture: 22.5, waste: 18.2, gdpIntensity: 314.7, perCapita: 13.7 }
+    ];
 
-      전기:
-      - 0.4173 kg CO2eq/kWh
-      - 2024년 승인 국가 온실가스 배출계수 기준
-
-      도시가스, 대중교통, 자가용:
-      - 사용자가 조사한 내용처럼 공식 산정은 연료 종류, 차량 종류,
-        연비, 전력 사용량 등에 따라 달라질 수 있음
-      - 아래 값은 웹 계산이 작동하도록 넣은 기본 계산값
-      - 공식 자료의 세부 계수를 확보하면 이 값만 수정하면 됨
+    /*
+      생활 탄소 발자국 계산용 배출계수
+      전기: 0.4173 kg CO₂eq/kWh
     */
     const FACTORS = {
-      electricity: 0.4173,      // kg CO2eq / kWh
-      gas: 2.18,               // kg CO2eq / m³
-      publicTransport: 0.05,   // kg CO2eq / km
-      car: 0.192               // kg CO2eq / km
+      electricity: 0.4173,
+      gas: 2.18,
+      publicTransport: 0.05,
+      car: 0.192
     };
 
     /*
-      ================================
       평균 사용량 비교 기준
-      ================================
-
-      전기:
-      - 서울시 가구당 전력소비량 2024년 296kWh/월
-
-      도시가스:
-      - 한국가스공사 공공데이터의 가구당 가정용 도시가스 소비량 자료로 수정 가능
-
-      교통:
-      - 대중교통, 자가용 평균 이동거리는 수행평가 상황에 맞게 수정 가능
+      전기 296kWh는 조사 자료의 서울시 가구당 월평균 전력소비량 기준
     */
     const AVERAGES = {
-      electricity: 296,        // kWh / 월
-      gas: 30,                 // m³ / 월
-      publicTransport: 120,    // km / 월
-      car: 200                 // km / 월
+      electricity: 296,
+      gas: 30,
+      publicTransport: 120,
+      car: 200
     };
+
+    const yearSelect = document.getElementById("yearSelect");
+    const nationalStatGrid = document.getElementById("nationalStatGrid");
+    const sectorBars = document.getElementById("sectorBars");
+    const nationalTable = document.getElementById("nationalTable");
 
     const form = document.getElementById("carbonForm");
     const resultBox = document.getElementById("resultBox");
@@ -736,28 +898,129 @@
     const adviceList = document.getElementById("adviceList");
     const message = document.getElementById("message");
 
+    function formatNumber(number) {
+      return Number(number).toFixed(1);
+    }
+
+    function getLatestNationalData() {
+      return NATIONAL_DATA[NATIONAL_DATA.length - 1];
+    }
+
+    function initYearSelect() {
+      NATIONAL_DATA.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.year;
+        option.textContent = `${item.year}년`;
+        yearSelect.appendChild(option);
+      });
+
+      yearSelect.value = getLatestNationalData().year;
+    }
+
+    function renderNationalData(year) {
+      const data = NATIONAL_DATA.find((item) => item.year === Number(year));
+      const firstData = NATIONAL_DATA[0];
+
+      const totalChange = data.total - firstData.total;
+      const gdpChange = data.gdpIntensity - firstData.gdpIntensity;
+      const perCapitaChange = data.perCapita - firstData.perCapita;
+
+      nationalStatGrid.innerHTML = `
+        <div class="stat-card">
+          <small>총배출량</small>
+          <strong>${formatNumber(data.total)}</strong>
+          <span>백만 톤 CO₂eq.<br>2013년 대비 ${totalChange >= 0 ? "+" : ""}${formatNumber(totalChange)}</span>
+        </div>
+
+        <div class="stat-card">
+          <small>에너지 부문</small>
+          <strong>${formatNumber(data.energy)}</strong>
+          <span>백만 톤 CO₂eq.<br>전체의 ${formatNumber((data.energy / data.total) * 100)}%</span>
+        </div>
+
+        <div class="stat-card">
+          <small>GDP 대비 배출량</small>
+          <strong>${formatNumber(data.gdpIntensity)}</strong>
+          <span>톤 CO₂eq./십억 원<br>2013년 대비 ${gdpChange >= 0 ? "+" : ""}${formatNumber(gdpChange)}</span>
+        </div>
+
+        <div class="stat-card">
+          <small>1인당 배출량</small>
+          <strong>${formatNumber(data.perCapita)}</strong>
+          <span>톤 CO₂eq./인<br>2013년 대비 ${perCapitaChange >= 0 ? "+" : ""}${formatNumber(perCapitaChange)}</span>
+        </div>
+      `;
+
+      const sectors = [
+        { name: "에너지", value: data.energy },
+        { name: "산업공정", value: data.industrial },
+        { name: "농업", value: data.agriculture },
+        { name: "폐기물", value: data.waste }
+      ];
+
+      sectorBars.innerHTML = sectors.map((sector) => {
+        const percent = (sector.value / data.total) * 100;
+
+        return `
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>${sector.name}</span>
+              <span>${formatNumber(sector.value)} 백만 톤 / ${formatNumber(percent)}%</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: ${percent}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderNationalTable() {
+      const years = NATIONAL_DATA.map((item) => item.year);
+
+      const rows = [
+        { label: "총배출량(백만 톤 CO₂eq.)", key: "total" },
+        { label: "에너지", key: "energy" },
+        { label: "산업공정", key: "industrial" },
+        { label: "농업", key: "agriculture" },
+        { label: "폐기물", key: "waste" },
+        { label: "GDP 대비 온실가스배출량(톤 CO₂eq./십억 원)", key: "gdpIntensity" },
+        { label: "1인당 온실가스 배출량(톤 CO₂eq./인)", key: "perCapita" }
+      ];
+
+      const thead = `
+        <thead>
+          <tr>
+            <th>구분</th>
+            ${years.map((year) => `<th>${year}</th>`).join("")}
+          </tr>
+        </thead>
+      `;
+
+      const tbody = `
+        <tbody>
+          ${rows.map((row) => `
+            <tr>
+              <td>${row.label}</td>
+              ${NATIONAL_DATA.map((item) => `<td>${formatNumber(item[row.key])}</td>`).join("")}
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+
+      nationalTable.innerHTML = thead + tbody;
+    }
+
     function getValue(id) {
       return Number(document.getElementById(id).value);
     }
 
-    function formatNumber(number) {
-      return number.toFixed(1);
-    }
-
     function getStatusText(value, average) {
-      if (value > average) {
-        return "평균보다 높음";
-      }
-
-      return "평균 이하";
+      return value > average ? "평균보다 높음" : "평균 이하";
     }
 
     function getCompareClass(value, average) {
-      if (value > average) {
-        return "high";
-      }
-
-      return "low";
+      return value > average ? "high" : "low";
     }
 
     function createCompareCard(title, value, average, unit) {
@@ -768,9 +1031,9 @@
       let description = "";
 
       if (value > average) {
-        description = `내 사용량은 ${value}${unit}로 평균 ${average}${unit}보다 ${difference}${unit} 높습니다.`;
+        description = `내 사용량은 ${value}${unit}로 기준값 ${average}${unit}보다 ${difference}${unit} 높습니다.`;
       } else {
-        description = `내 사용량은 ${value}${unit}로 평균 ${average}${unit}보다 ${difference}${unit} 낮거나 같습니다.`;
+        description = `내 사용량은 ${value}${unit}로 기준값 ${average}${unit}보다 ${difference}${unit} 낮거나 같습니다.`;
       }
 
       return `
@@ -790,7 +1053,7 @@
       adviceList.appendChild(li);
     }
 
-    function makeAdvice(values, carbons, total, averageTotal) {
+    function makeAdvice(values, carbons, total, nationalMonthlyAverage) {
       adviceList.innerHTML = "";
 
       const carbonItems = [
@@ -803,10 +1066,10 @@
       carbonItems.sort((a, b) => b.carbon - a.carbon);
       const biggest = carbonItems[0];
 
-      if (total > averageTotal) {
-        addAdvice(`전체 탄소 배출량이 평균 예상값보다 높습니다. 특히 '${biggest.name}' 항목의 배출량이 가장 크므로 이 부분부터 줄이는 것이 효과적입니다.`);
+      if (total > nationalMonthlyAverage) {
+        addAdvice(`나의 월간 배출량이 2023년 1인당 배출량을 월 단위로 환산한 값보다 높습니다. 특히 '${biggest.name}' 항목의 배출량이 가장 크므로 이 부분부터 줄이는 것이 효과적입니다.`);
       } else {
-        addAdvice("전체 탄소 배출량이 평균 예상값 이하입니다. 현재 생활 습관을 유지하면서 조금씩 더 줄여보세요.");
+        addAdvice("나의 월간 배출량은 2023년 1인당 배출량을 월 단위로 환산한 값보다 낮습니다. 현재 생활 습관을 유지하면서 조금씩 더 줄여보세요.");
       }
 
       if (values.electricity > AVERAGES.electricity) {
@@ -822,13 +1085,13 @@
       }
 
       if (values.car > AVERAGES.car) {
-        addAdvice("자가용 이용 거리가 평균보다 높습니다. 가까운 거리는 걷기나 자전거를 이용하고, 등하교나 학원 이동은 대중교통 이용을 늘려보세요.");
+        addAdvice("자가용 이용 거리가 기준보다 높습니다. 가까운 거리는 걷기나 자전거를 이용하고, 등하교나 학원 이동은 대중교통 이용을 늘려보세요.");
         addAdvice("자가용을 꼭 이용해야 한다면 가족이나 친구와 함께 이동하는 카풀을 활용해 1인당 배출량을 줄일 수 있습니다.");
         addAdvice("급출발과 급제동을 줄이고, 타이어 공기압을 적정하게 유지하면 연료 사용량과 온실가스 배출량을 줄일 수 있습니다.");
       }
 
       if (values.publicTransport > AVERAGES.publicTransport) {
-        addAdvice("대중교통 이용 거리가 평균보다 높습니다. 대중교통은 자가용보다 탄소 배출이 적은 편이지만, 짧은 거리는 걷기나 자전거로 바꾸면 더 줄일 수 있습니다.");
+        addAdvice("대중교통 이용 거리가 기준보다 높습니다. 대중교통은 자가용보다 탄소 배출이 적은 편이지만, 짧은 거리는 걷기나 자전거로 바꾸면 더 줄일 수 있습니다.");
       }
 
       if (
@@ -836,9 +1099,13 @@
         values.gas <= AVERAGES.gas &&
         values.car <= AVERAGES.car
       ) {
-        addAdvice("전기, 도시가스, 자가용 사용량이 평균 이하입니다. 앞으로도 대기전력 줄이기, 짧은 거리 걷기, 재사용 습관을 꾸준히 실천해 보세요.");
+        addAdvice("전기, 도시가스, 자가용 사용량이 기준 이하입니다. 앞으로도 대기전력 줄이기, 짧은 거리 걷기, 재사용 습관을 꾸준히 실천해 보세요.");
       }
     }
+
+    yearSelect.addEventListener("change", function () {
+      renderNationalData(yearSelect.value);
+    });
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -863,11 +1130,15 @@
         carbons.publicTransport +
         carbons.car;
 
-      const averageTotal =
-        AVERAGES.electricity * FACTORS.electricity +
-        AVERAGES.gas * FACTORS.gas +
-        AVERAGES.publicTransport * FACTORS.publicTransport +
-        AVERAGES.car * FACTORS.car;
+      const latestNationalData = getLatestNationalData();
+
+      /*
+        2023년 1인당 온실가스 배출량 13.7톤 CO₂eq./인을
+        kg 단위 월평균으로 환산
+        13.7톤 × 1000kg ÷ 12개월 = 약 1141.7kg/월
+      */
+      const nationalMonthlyAverage =
+        latestNationalData.perCapita * 1000 / 12;
 
       totalCarbon.textContent = formatNumber(total);
       electricityResult.textContent = formatNumber(carbons.electricity);
@@ -875,11 +1146,11 @@
       publicResult.textContent = formatNumber(carbons.publicTransport);
       carResult.textContent = formatNumber(carbons.car);
 
-      if (total > averageTotal) {
-        overallStatus.textContent = `평균 예상 배출량 ${formatNumber(averageTotal)}kg보다 높습니다`;
+      if (total > nationalMonthlyAverage) {
+        overallStatus.textContent = `2023년 1인당 월평균 환산값 ${formatNumber(nationalMonthlyAverage)}kg보다 높습니다`;
         overallStatus.className = "overall-status status-high";
       } else {
-        overallStatus.textContent = `평균 예상 배출량 ${formatNumber(averageTotal)}kg 이하입니다`;
+        overallStatus.textContent = `2023년 1인당 월평균 환산값 ${formatNumber(nationalMonthlyAverage)}kg 이하입니다`;
         overallStatus.className = "overall-status status-low";
       }
 
@@ -889,14 +1160,21 @@
         createCompareCard("대중교통 이용 거리", values.publicTransport, AVERAGES.publicTransport, "km") +
         createCompareCard("자가용 이용 거리", values.car, AVERAGES.car, "km");
 
-      makeAdvice(values, carbons, total, averageTotal);
+      makeAdvice(values, carbons, total, nationalMonthlyAverage);
 
-      if (total > averageTotal) {
+      const highestItem = [
+        { name: "전기", value: carbons.electricity },
+        { name: "도시가스", value: carbons.gas },
+        { name: "대중교통", value: carbons.publicTransport },
+        { name: "자가용", value: carbons.car }
+      ].sort((a, b) => b.value - a.value)[0];
+
+      if (total > nationalMonthlyAverage) {
         message.textContent =
-          "나의 탄소 발자국이 평균보다 높게 나왔습니다. 가장 많이 배출되는 항목부터 하나씩 줄이면 효과적으로 탄소 배출을 줄일 수 있습니다.";
+          `나의 탄소 발자국이 국가 1인당 월평균 환산값보다 높게 나왔습니다. 가장 큰 배출 항목은 '${highestItem.name}'입니다.`;
       } else {
         message.textContent =
-          "나의 탄소 발자국이 평균 이하로 나왔습니다. 지금처럼 에너지 절약과 대중교통 이용을 꾸준히 실천해 보세요.";
+          `나의 탄소 발자국이 국가 1인당 월평균 환산값보다 낮게 나왔습니다. 가장 큰 배출 항목은 '${highestItem.name}'이므로 이 부분을 조금 더 줄이면 좋습니다.`;
       }
 
       resultBox.style.display = "block";
@@ -905,6 +1183,10 @@
         block: "nearest"
       });
     });
+
+    initYearSelect();
+    renderNationalData(getLatestNationalData().year);
+    renderNationalTable();
   </script>
 </body>
 </html>
