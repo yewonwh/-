@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>우리 동네 탄소 발자국 계산기</title>
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
     * {
       box-sizing: border-box;
@@ -19,25 +16,28 @@
       min-height: 100vh;
       font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(46, 204, 113, 0.25), transparent 34%),
-        radial-gradient(circle at bottom right, rgba(52, 152, 219, 0.25), transparent 34%),
-        linear-gradient(135deg, #dff8e6 0%, #d9f1ff 100%);
-      color: #1f3d36;
-      padding: 24px;
+        radial-gradient(circle at 15% 10%, rgba(94, 222, 139, 0.35), transparent 28%),
+        radial-gradient(circle at 85% 85%, rgba(71, 171, 255, 0.35), transparent 30%),
+        linear-gradient(135deg, #eafff1 0%, #edf8ff 100%);
+      color: #143d35;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 36px 16px;
     }
 
-    .page {
+    .container {
       width: 100%;
-      max-width: 980px;
-      margin: 0 auto;
+      max-width: 1080px;
     }
 
-    .hero-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 32px;
-      padding: 40px;
-      box-shadow: 0 24px 56px rgba(38, 115, 91, 0.18);
+    .card {
+      background: rgba(255, 255, 255, 0.94);
       border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 30px;
+      padding: 44px;
+      box-shadow: 0 24px 70px rgba(36, 93, 82, 0.18);
+      backdrop-filter: blur(18px);
     }
 
     .header {
@@ -46,955 +46,865 @@
     }
 
     .badge {
-      display: inline-block;
-      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
       border-radius: 999px;
-      background: #e8f8ee;
-      color: #16804f;
+      background: linear-gradient(135deg, #d9fbe6, #dcefff);
+      color: #14795a;
       font-size: 14px;
-      font-weight: 900;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: clamp(28px, 5vw, 46px);
+      line-height: 1.2;
+      color: #0d4f3b;
       margin-bottom: 14px;
     }
 
-    h1 {
-      font-size: 36px;
-      color: #123c34;
-      margin-bottom: 12px;
-      line-height: 1.25;
-    }
-
-    .subtitle {
-      color: #5f756f;
+    .header p {
+      max-width: 780px;
+      margin: 0 auto;
       font-size: 16px;
       line-height: 1.7;
+      color: #58766f;
     }
 
-    .research-box {
+    .info-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
       margin-bottom: 28px;
-      padding: 22px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, #f2fff7, #f1f9ff);
-      border: 1px solid #cfeee2;
     }
 
-    .research-box h2 {
+    .info-item {
+      padding: 18px;
+      border-radius: 20px;
+      background: #f7fffb;
+      border: 1px solid #dcefe7;
+      text-align: center;
+    }
+
+    .info-item strong {
+      display: block;
+      color: #13875f;
       font-size: 20px;
-      color: #1d5f4a;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
     }
 
-    .research-box p {
-      color: #4f6f66;
-      font-size: 15px;
-      line-height: 1.7;
-    }
-
-    .source-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .source-tags span {
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: white;
-      border: 1px solid #dbeee7;
-      color: #277b60;
+    .info-item span {
       font-size: 13px;
-      font-weight: 800;
+      color: #68847d;
+      line-height: 1.45;
     }
 
     form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-grid {
       display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 22px;
     }
 
-    .section {
-      border-radius: 24px;
-      padding: 24px;
-      background: #f7fcfa;
-      border: 1px solid #dbeee7;
+    .form-section {
+      border-radius: 26px;
+      padding: 26px;
+      border: 1px solid #dceee7;
+      background: #ffffff;
+    }
+
+    .form-section.house {
+      background: linear-gradient(180deg, #ffffff 0%, #f1fff6 100%);
+    }
+
+    .form-section.transport {
+      background: linear-gradient(180deg, #ffffff 0%, #f0f8ff 100%);
     }
 
     .section-title {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 900;
-      color: #1d5f4a;
-      margin-bottom: 18px;
+      gap: 12px;
+      margin-bottom: 22px;
     }
 
-    .icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
+    .section-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #40c878, #39a9db);
-      color: white;
-      font-size: 19px;
+      font-size: 24px;
     }
 
-    .input-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
+    .house .section-icon {
+      background: #dff9e8;
+    }
+
+    .transport .section-icon {
+      background: #dcefff;
+    }
+
+    .section-title h2 {
+      font-size: 20px;
+      color: #174b3f;
+    }
+
+    .section-title p {
+      font-size: 13px;
+      color: #6a837d;
+      margin-top: 3px;
     }
 
     .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .input-group:last-child {
+      margin-bottom: 0;
     }
 
     label {
+      display: block;
       font-size: 14px;
       font-weight: 800;
-      color: #31564d;
+      color: #315e55;
+      margin-bottom: 8px;
     }
 
-    .input-box {
+    .input-wrap {
       position: relative;
     }
 
     input {
       width: 100%;
-      padding: 15px 62px 15px 16px;
-      border: 1px solid #cfe5dc;
-      border-radius: 16px;
+      border: 1.5px solid #d5e7e1;
+      border-radius: 17px;
+      padding: 15px 64px 15px 16px;
       font-size: 16px;
+      color: #173b33;
+      background: #fbfffd;
       outline: none;
-      background: white;
-      color: #1f3d36;
-      transition: 0.2s ease;
+      transition: 0.25s ease;
+    }
+
+    input::placeholder {
+      color: #9ab2ac;
     }
 
     input:focus {
-      border-color: #37b875;
-      box-shadow: 0 0 0 4px rgba(55, 184, 117, 0.14);
+      border-color: #27c986;
+      box-shadow: 0 0 0 4px rgba(39, 201, 134, 0.15);
+      background: #ffffff;
     }
 
     .unit {
       position: absolute;
-      right: 16px;
       top: 50%;
+      right: 16px;
       transform: translateY(-50%);
+      color: #66877f;
       font-size: 14px;
-      font-weight: 900;
-      color: #6b8a82;
+      font-weight: 800;
     }
 
-    .input-help {
-      font-size: 12px;
-      color: #6c827c;
-      line-height: 1.5;
-    }
-
-    .calculate-btn {
+    .submit-btn {
       width: 100%;
       border: none;
-      border-radius: 18px;
-      padding: 18px 20px;
+      border-radius: 22px;
+      padding: 19px 20px;
+      margin-top: 4px;
+      background: linear-gradient(135deg, #20c779, #1e9bff);
+      color: white;
       font-size: 18px;
       font-weight: 900;
-      color: white;
       cursor: pointer;
-      background: linear-gradient(135deg, #22b86f, #278ee8);
-      box-shadow: 0 14px 28px rgba(39, 142, 232, 0.25);
+      box-shadow: 0 16px 34px rgba(30, 155, 255, 0.28);
       transition: 0.25s ease;
     }
 
-    .calculate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 34px rgba(39, 142, 232, 0.32);
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 42px rgba(32, 199, 121, 0.32);
     }
 
-    .result {
+    .result-box {
       display: none;
       margin-top: 30px;
-      animation: fadeIn 0.45s ease;
+      padding: 30px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #f0fff6, #eef8ff);
+      border: 1px solid #d9eee6;
+      animation: fadeUp 0.35s ease;
     }
 
-    .result.show {
-      display: block;
-    }
-
-    @keyframes fadeIn {
+    @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(18px);
+        transform: translateY(12px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
 
-    .result-inner {
-      padding: 30px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, #ecfff4, #eef8ff);
-      border: 1px solid #cdeee1;
+    .result-title {
+      font-size: 24px;
+      color: #0f4c3a;
+      margin-bottom: 18px;
       text-align: center;
     }
 
-    .result-title {
-      font-size: 18px;
-      font-weight: 900;
-      color: #16804f;
-      margin-bottom: 10px;
-    }
-
-    .result-text {
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1.4;
-      color: #123c34;
-      margin-bottom: 12px;
-    }
-
-    .result-text span {
-      color: #278ee8;
-    }
-
-    .average-note {
-      font-size: 13px;
-      color: #6c827c;
-      line-height: 1.6;
+    .total-result {
+      text-align: center;
       margin-bottom: 22px;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .summary-item {
-      background: white;
-      border: 1px solid #dbeee7;
-      border-radius: 18px;
-      padding: 15px 10px;
-    }
-
-    .summary-item strong {
-      display: block;
-      color: #1d5f4a;
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    .summary-item span {
-      font-size: 14px;
-      font-weight: 900;
-      color: #278ee8;
-    }
-
-    .chart-box {
-      max-width: 370px;
-      margin: 0 auto;
-    }
-
-    .chart-warning {
-      display: none;
-      margin-top: 16px;
-      padding: 14px;
-      border-radius: 14px;
-      background: #fff7ed;
-      color: #b45309;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .comparison-box {
-      margin-top: 24px;
-      padding: 20px;
-      border-radius: 18px;
-      font-size: 17px;
-      font-weight: 900;
-      line-height: 1.6;
-    }
-
-    .comparison-box.high {
-      background: #fff4e8;
-      color: #b45309;
-      border: 1px solid #ffd6a6;
-    }
-
-    .comparison-box.normal {
-      background: #eef8ff;
-      color: #1d6fa5;
-      border: 1px solid #c8e7ff;
-    }
-
-    .comparison-box.low {
-      background: #ecfff4;
-      color: #16804f;
-      border: 1px solid #bdeed2;
-    }
-
-    .detail-comparison {
-      margin-top: 16px;
-      padding: 20px;
-      border-radius: 18px;
-      background: white;
-      border: 1px solid #dbeee7;
-      text-align: left;
-    }
-
-    .detail-comparison h3 {
-      color: #1d5f4a;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-
-    .detail-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid #edf5f2;
-      font-size: 14px;
-      color: #425f57;
-    }
-
-    .detail-row:last-child {
-      border-bottom: none;
-    }
-
-    .status {
-      font-weight: 900;
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-size: 12px;
-    }
-
-    .status.high {
-      background: #fff4e8;
-      color: #b45309;
-    }
-
-    .status.low {
-      background: #ecfff4;
-      color: #16804f;
-    }
-
-    .status.normal {
-      background: #eef8ff;
-      color: #1d6fa5;
-    }
-
-    .tips-box {
-      margin-top: 16px;
       padding: 22px;
-      border-radius: 18px;
       background: #ffffff;
-      border: 1px solid #dbeee7;
-      text-align: left;
+      border-radius: 24px;
+      border: 1px solid #dcefe7;
     }
 
-    .tips-box h3 {
-      color: #1d5f4a;
-      margin-bottom: 12px;
-      font-size: 18px;
+    .total-result strong {
+      display: block;
+      font-size: clamp(36px, 6vw, 56px);
+      color: #139263;
+      line-height: 1.1;
     }
 
-    .tips-box ul {
-      padding-left: 20px;
-      color: #425f57;
-      line-height: 1.8;
+    .total-result span {
+      color: #5f7f77;
       font-size: 15px;
     }
 
-    .standard-box {
-      margin-top: 18px;
-      padding: 20px;
-      border-radius: 20px;
-      background: #f7fcfa;
-      border: 1px solid #dbeee7;
+    .overall-status {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 8px 15px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 900;
     }
 
-    .standard-box h2 {
+    .status-high {
+      background: #fff0e8;
+      color: #d65a22;
+    }
+
+    .status-low {
+      background: #e9fff3;
+      color: #128256;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .result-item {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid #dcefe7;
+    }
+
+    .result-item b {
+      display: block;
+      margin-bottom: 8px;
+      color: #315e55;
+      font-size: 14px;
+    }
+
+    .result-item span {
+      color: #168b63;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .compare-section,
+    .advice-section {
+      margin-top: 22px;
+    }
+
+    .sub-title {
       font-size: 19px;
-      color: #1d5f4a;
+      color: #164c3f;
+      margin-bottom: 14px;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .compare-card {
+      background: #ffffff;
+      border: 1px solid #dcefe7;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .compare-card.high {
+      border-color: #ffd0b7;
+      background: #fff8f4;
+    }
+
+    .compare-card.low {
+      border-color: #c9efd9;
+      background: #f7fffb;
+    }
+
+    .compare-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .compare-top h4 {
+      font-size: 16px;
+      color: #244f47;
+    }
+
+    .compare-badge {
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .compare-card.high .compare-badge {
+      background: #ffe5d8;
+      color: #c54b1b;
+    }
+
+    .compare-card.low .compare-badge {
+      background: #e2f8eb;
+      color: #167a52;
+    }
+
+    .compare-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #647d76;
+    }
+
+    .advice-box {
+      background: #ffffff;
+      border: 1px solid #dcefe7;
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .advice-box ul {
+      padding-left: 20px;
+      color: #4f6d66;
+      font-size: 14px;
+      line-height: 1.85;
+    }
+
+    .message {
+      margin-top: 18px;
+      padding: 17px;
+      border-radius: 18px;
+      background: #ffffff;
+      color: #4f6d66;
+      font-size: 14px;
+      line-height: 1.7;
+      text-align: center;
+      border: 1px solid #dcefe7;
+    }
+
+    .source-box {
+      margin-top: 24px;
+      padding: 22px;
+      border-radius: 22px;
+      background: #f8fbfa;
+      border: 1px solid #e0eee9;
+    }
+
+    .source-box h3 {
+      font-size: 17px;
+      color: #24574c;
       margin-bottom: 12px;
     }
 
-    .standard-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      list-style: none;
-    }
-
-    .standard-list li {
-      background: white;
-      border: 1px solid #e3f0eb;
-      border-radius: 14px;
-      padding: 12px;
-      font-size: 14px;
-      color: #46645c;
-      line-height: 1.5;
-    }
-
-    .standard-list strong {
-      color: #1d5f4a;
-    }
-
-    .footer-note {
-      text-align: center;
-      margin-top: 20px;
+    .source-box ul {
+      padding-left: 20px;
+      color: #6a817b;
       font-size: 13px;
-      color: #6c827c;
+      line-height: 1.75;
     }
 
-    @media (max-width: 720px) {
+    .notice {
+      margin-top: 14px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #7b918b;
+    }
+
+    @media (max-width: 820px) {
       body {
-        padding: 16px;
+        align-items: flex-start;
+        padding: 24px 14px;
       }
 
-      .hero-card {
-        padding: 24px;
-        border-radius: 24px;
+      .card {
+        padding: 28px 20px;
+        border-radius: 26px;
       }
 
-      h1 {
-        font-size: 27px;
-      }
-
-      .subtitle {
-        font-size: 14px;
-      }
-
-      .section {
-        padding: 20px;
-      }
-
-      .input-grid {
+      .info-box,
+      .section-grid,
+      .result-grid,
+      .compare-grid {
         grid-template-columns: 1fr;
       }
 
-      .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .standard-list {
-        grid-template-columns: 1fr;
-      }
-
-      .result-inner {
+      .form-section {
         padding: 22px;
       }
 
-      .result-text {
-        font-size: 22px;
-      }
-
-      .detail-row {
-        grid-template-columns: 1fr;
-      }
-
-      .calculate-btn {
+      .submit-btn {
         font-size: 16px;
-        padding: 16px;
+        padding: 17px 16px;
+      }
+
+      .compare-top {
+        align-items: flex-start;
+        flex-direction: column;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page">
-    <section class="hero-card">
+  <main class="container">
+    <section class="card">
       <div class="header">
-        <span class="badge">Eco Carbon Calculator</span>
+        <div class="badge">🌱 공식 자료 기반 탄소 계산 프로젝트</div>
         <h1>우리 동네 탄소 발자국 계산기</h1>
-        <p class="subtitle">
-          전기, 도시가스, 대중교통, 자가용 사용량을 입력하면<br />
-          한 달 탄소 배출량과 평균 대비 결과를 확인할 수 있습니다.
+        <p>
+          본 계산기는 환경부·온실가스종합정보센터·한국가스공사 등 공식 기관의 자료를 바탕으로,
+          가정의 전기·도시가스·교통 이용에 따른 온실가스 배출량을 추정합니다.
         </p>
       </div>
 
-      <section class="research-box">
-        <h2>조사 자료 반영 내용</h2>
-        <p>
-          본 계산기는 온실가스종합정보센터, 서울특별시 에너지정보, 한국가스공사,
-          국토교통부·교통 분야 자료를 참고하여 생활 속 탄소 배출량을 추정합니다.
-          전기는 조사 자료의 전력 배출계수 0.4173 kg CO2eq/kWh를 적용했고,
-          서울시 가구당 전력소비량 296kWh/월을 평균 비교 기준으로 사용했습니다.
-        </p>
-        <div class="source-tags">
-          <span>온실가스종합정보센터</span>
-          <span>서울특별시 에너지정보</span>
-          <span>한국가스공사</span>
-          <span>국토교통부</span>
-          <span>한국교통연구원</span>
+      <div class="info-box">
+        <div class="info-item">
+          <strong>0.4173</strong>
+          <span>전기 1kWh당<br />kg CO₂eq</span>
         </div>
-      </section>
+
+        <div class="info-item">
+          <strong>296kWh</strong>
+          <span>서울시 가구당<br />월평균 전력소비량</span>
+        </div>
+
+        <div class="info-item">
+          <strong>96.5%</strong>
+          <span>2022년 수송 부문 중<br />도로수송 비중</span>
+        </div>
+      </div>
 
       <form id="carbonForm">
-        <section class="section">
-          <div class="section-title">
-            <span class="icon">🏠</span>
-            <span>주거 에너지</span>
-          </div>
+        <div class="section-grid">
+          <section class="form-section house">
+            <div class="section-title">
+              <div class="section-icon">🏠</div>
+              <div>
+                <h2>주거</h2>
+                <p>전기와 도시가스 사용량</p>
+              </div>
+            </div>
 
-          <div class="input-grid">
             <div class="input-group">
               <label for="electricity">전기 사용량</label>
-              <div class="input-box">
-                <input type="number" id="electricity" placeholder="예: 296" min="0" step="0.1" />
+              <div class="input-wrap">
+                <input
+                  type="number"
+                  id="electricity"
+                  min="0"
+                  step="0.1"
+                  placeholder="예: 296"
+                  required
+                />
                 <span class="unit">kWh</span>
               </div>
-              <p class="input-help">서울시 가구당 평균 전력소비량 예시: 296kWh/월</p>
             </div>
 
             <div class="input-group">
               <label for="gas">도시가스 사용량</label>
-              <div class="input-box">
-                <input type="number" id="gas" placeholder="예: 30" min="0" step="0.1" />
+              <div class="input-wrap">
+                <input
+                  type="number"
+                  id="gas"
+                  min="0"
+                  step="0.1"
+                  placeholder="예: 30"
+                  required
+                />
                 <span class="unit">m³</span>
               </div>
-              <p class="input-help">도시가스 평균값은 지역·계절에 따라 달라질 수 있습니다.</p>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section class="section">
-          <div class="section-title">
-            <span class="icon">🚌</span>
-            <span>교통 이동</span>
-          </div>
+          <section class="form-section transport">
+            <div class="section-title">
+              <div class="section-icon">🚌</div>
+              <div>
+                <h2>교통</h2>
+                <p>대중교통과 자가용 이동거리</p>
+              </div>
+            </div>
 
-          <div class="input-grid">
             <div class="input-group">
               <label for="publicTransport">대중교통 이용 거리</label>
-              <div class="input-box">
-                <input type="number" id="publicTransport" placeholder="예: 120" min="0" step="0.1" />
+              <div class="input-wrap">
+                <input
+                  type="number"
+                  id="publicTransport"
+                  min="0"
+                  step="0.1"
+                  placeholder="예: 120"
+                  required
+                />
                 <span class="unit">km</span>
               </div>
-              <p class="input-help">버스·지하철 등 대중교통 이용 거리입니다.</p>
             </div>
 
             <div class="input-group">
               <label for="car">자가용 이용 거리</label>
-              <div class="input-box">
-                <input type="number" id="car" placeholder="예: 100" min="0" step="0.1" />
+              <div class="input-wrap">
+                <input
+                  type="number"
+                  id="car"
+                  min="0"
+                  step="0.1"
+                  placeholder="예: 200"
+                  required
+                />
                 <span class="unit">km</span>
               </div>
-              <p class="input-help">개인 차량 이용 거리가 길수록 배출량이 커집니다.</p>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
 
-        <button class="calculate-btn" type="submit">나의 탄소 발자국 계산하기</button>
+        <button type="submit" class="submit-btn">
+          나의 탄소 발자국 계산하기
+        </button>
       </form>
 
-      <section class="result" id="resultBox">
-        <div class="result-inner">
-          <p class="result-title">계산 결과</p>
+      <section class="result-box" id="resultBox">
+        <h2 class="result-title">나의 월간 탄소 발자국 결과</h2>
 
-          <p class="result-text">
-            한 달 총 탄소 배출량은<br />
-            <span id="totalCarbon">0</span> kg CO2eq 입니다.
-          </p>
+        <div class="total-result">
+          <strong id="totalCarbon">0</strong>
+          <span>kg CO₂eq / 월</span>
+          <div class="overall-status" id="overallStatus">
+            평균과 비교 결과
+          </div>
+        </div>
 
-          <p class="average-note">
-            평균 비교 기준: 전기 296kWh/월, 도시가스 30m³/월, 대중교통 120km/월, 자가용 100km/월<br />
-            도시가스·교통 평균값과 계수는 수행평가용 단순화 값이며, 공식 지역 자료가 있다면 코드에서 수정할 수 있습니다.
-          </p>
-
-          <div class="chart-box">
-            <canvas id="carbonChart"></canvas>
+        <div class="result-grid">
+          <div class="result-item">
+            <b>전기</b>
+            <span id="electricityResult">0</span>
           </div>
 
-          <p class="chart-warning" id="chartWarning">
-            그래프 라이브러리를 불러오지 못했지만, 계산 결과와 분석은 정상 표시됩니다.
-          </p>
-
-          <div class="summary-grid">
-            <div class="summary-item">
-              <strong>전기</strong>
-              <span id="electricityResult">0 kg</span>
-            </div>
-            <div class="summary-item">
-              <strong>도시가스</strong>
-              <span id="gasResult">0 kg</span>
-            </div>
-            <div class="summary-item">
-              <strong>대중교통</strong>
-              <span id="publicResult">0 kg</span>
-            </div>
-            <div class="summary-item">
-              <strong>자가용</strong>
-              <span id="carResult">0 kg</span>
-            </div>
+          <div class="result-item">
+            <b>도시가스</b>
+            <span id="gasResult">0</span>
           </div>
 
-          <div class="comparison-box" id="comparisonBox"></div>
-
-          <div class="detail-comparison">
-            <h3>항목별 평균 비교</h3>
-            <div id="detailComparison"></div>
+          <div class="result-item">
+            <b>대중교통</b>
+            <span id="publicResult">0</span>
           </div>
 
-          <div class="tips-box" id="tipsBox"></div>
+          <div class="result-item">
+            <b>자가용</b>
+            <span id="carResult">0</span>
+          </div>
+        </div>
+
+        <div class="compare-section">
+          <h3 class="sub-title">평균 사용량과 비교</h3>
+          <div class="compare-grid" id="compareGrid"></div>
+        </div>
+
+        <div class="advice-section">
+          <h3 class="sub-title">탄소 발자국을 줄이는 구체적인 방법</h3>
+          <div class="advice-box">
+            <ul id="adviceList"></ul>
+          </div>
+        </div>
+
+        <div class="message" id="message">
+          결과 메시지가 이곳에 표시됩니다.
         </div>
       </section>
 
-      <section class="standard-box">
-        <h2>계산 기준</h2>
-        <ul class="standard-list">
-          <li><strong>전기</strong><br />입력값 × 0.4173 kg CO2eq/kWh</li>
-          <li><strong>도시가스</strong><br />입력값 × 2.176 kg CO2eq/m³</li>
-          <li><strong>대중교통</strong><br />입력값 × 0.04 kg CO2eq/km</li>
-          <li><strong>자가용</strong><br />입력값 × 0.19 kg CO2eq/km</li>
+      <section class="source-box">
+        <h3>공식 자료 및 계산 기준</h3>
+        <ul>
+          <li>대한민국 온실가스 배출 현황: 온실가스종합정보센터 국가 온실가스 인벤토리 및 국가·지역온실가스통계</li>
+          <li>전기 배출계수: 0.4173 kg CO₂eq/kWh, 2024년 승인 국가 온실가스 배출계수 기준</li>
+          <li>수송 부문 배출 현황: 2022년 수송 부문 배출량 98,502천 톤 CO₂eq, 도로수송 95,093천 톤 CO₂eq, 비중 96.5%</li>
+          <li>전기 평균 비교 기준: 서울시 가구당 전력소비량 2024년 296kWh/월</li>
+          <li>도시가스 비교 기준: 한국가스공사 공공데이터의 가구당 가정용 도시가스 소비량 자료 활용 가능</li>
+          <li>교통 부문: 국토교통부, 탄소공간지도, 한국교통연구원, 국가 배출계수 자료 참고</li>
         </ul>
-      </section>
 
-      <p class="footer-note">
-        작은 습관의 변화가 우리 동네의 더 깨끗한 미래를 만듭니다 🌱
-      </p>
+        <p class="notice">
+          ※ 도시가스, 대중교통, 자가용은 연료 종류, 차량 종류, 연비, 지역, 전력 사용량에 따라 달라질 수 있습니다.
+          따라서 코드 상단의 FACTORS와 AVERAGES 값을 공식 공표 자료에 맞게 수정하면 더 정확한 계산기로 발전시킬 수 있습니다.
+        </p>
+      </section>
     </section>
   </main>
 
   <script>
+    /*
+      ================================
+      탄소 배출 계수
+      ================================
+
+      전기:
+      - 0.4173 kg CO2eq/kWh
+      - 2024년 승인 국가 온실가스 배출계수 기준
+
+      도시가스, 대중교통, 자가용:
+      - 사용자가 조사한 내용처럼 공식 산정은 연료 종류, 차량 종류,
+        연비, 전력 사용량 등에 따라 달라질 수 있음
+      - 아래 값은 웹 계산이 작동하도록 넣은 기본 계산값
+      - 공식 자료의 세부 계수를 확보하면 이 값만 수정하면 됨
+    */
+    const FACTORS = {
+      electricity: 0.4173,      // kg CO2eq / kWh
+      gas: 2.18,               // kg CO2eq / m³
+      publicTransport: 0.05,   // kg CO2eq / km
+      car: 0.192               // kg CO2eq / km
+    };
+
+    /*
+      ================================
+      평균 사용량 비교 기준
+      ================================
+
+      전기:
+      - 서울시 가구당 전력소비량 2024년 296kWh/월
+
+      도시가스:
+      - 한국가스공사 공공데이터의 가구당 가정용 도시가스 소비량 자료로 수정 가능
+
+      교통:
+      - 대중교통, 자가용 평균 이동거리는 수행평가 상황에 맞게 수정 가능
+    */
+    const AVERAGES = {
+      electricity: 296,        // kWh / 월
+      gas: 30,                 // m³ / 월
+      publicTransport: 120,    // km / 월
+      car: 200                 // km / 월
+    };
+
     const form = document.getElementById("carbonForm");
     const resultBox = document.getElementById("resultBox");
-    const totalCarbonText = document.getElementById("totalCarbon");
 
+    const totalCarbon = document.getElementById("totalCarbon");
     const electricityResult = document.getElementById("electricityResult");
     const gasResult = document.getElementById("gasResult");
     const publicResult = document.getElementById("publicResult");
     const carResult = document.getElementById("carResult");
 
-    const comparisonBox = document.getElementById("comparisonBox");
-    const detailComparison = document.getElementById("detailComparison");
-    const tipsBox = document.getElementById("tipsBox");
-    const chartCanvas = document.getElementById("carbonChart");
-    const chartWarning = document.getElementById("chartWarning");
+    const overallStatus = document.getElementById("overallStatus");
+    const compareGrid = document.getElementById("compareGrid");
+    const adviceList = document.getElementById("adviceList");
+    const message = document.getElementById("message");
 
-    let carbonChart = null;
+    function getValue(id) {
+      return Number(document.getElementById(id).value);
+    }
 
-    /*
-      조사 자료 반영 배출계수
+    function formatNumber(number) {
+      return number.toFixed(1);
+    }
 
-      전기:
-      - 조사 자료에서 제시한 전력 배출계수 0.4173 kg CO2eq/kWh 적용
+    function getStatusText(value, average) {
+      if (value > average) {
+        return "평균보다 높음";
+      }
 
-      도시가스, 대중교통, 자가용:
-      - 실제 공식 산정은 연료, 차종, 지역, 운행 조건에 따라 달라질 수 있음
-      - 수행평가용 웹 계산기에서는 이해하기 쉬운 단순화 계수로 적용
-    */
-    const emissionFactor = {
-      electricity: 0.4173,
-      gas: 2.176,
-      publicTransport: 0.04,
-      car: 0.19
-    };
+      return "평균 이하";
+    }
 
-    /*
-      평균 비교 기준
+    function getCompareClass(value, average) {
+      if (value > average) {
+        return "high";
+      }
 
-      전기:
-      - 조사 자료의 서울시 가구당 전력소비량 296kWh/월 반영
+      return "low";
+    }
 
-      도시가스, 대중교통, 자가용:
-      - 지역·계절·생활 방식에 따라 평균값이 달라질 수 있어
-        수행평가용 예시 평균값으로 설정
-      - 공식 자료나 선생님이 제시한 기준이 있다면 아래 숫자만 바꾸면 됨
-    */
-    const averageUsage = {
-      electricity: 296,
-      gas: 30,
-      publicTransport: 120,
-      car: 100
-    };
+    function createCompareCard(title, value, average, unit) {
+      const status = getStatusText(value, average);
+      const cardClass = getCompareClass(value, average);
+      const difference = Math.abs(value - average).toFixed(1);
 
-    const averageCarbon =
-      averageUsage.electricity * emissionFactor.electricity +
-      averageUsage.gas * emissionFactor.gas +
-      averageUsage.publicTransport * emissionFactor.publicTransport +
-      averageUsage.car * emissionFactor.car;
+      let description = "";
+
+      if (value > average) {
+        description = `내 사용량은 ${value}${unit}로 평균 ${average}${unit}보다 ${difference}${unit} 높습니다.`;
+      } else {
+        description = `내 사용량은 ${value}${unit}로 평균 ${average}${unit}보다 ${difference}${unit} 낮거나 같습니다.`;
+      }
+
+      return `
+        <div class="compare-card ${cardClass}">
+          <div class="compare-top">
+            <h4>${title}</h4>
+            <span class="compare-badge">${status}</span>
+          </div>
+          <p>${description}</p>
+        </div>
+      `;
+    }
+
+    function addAdvice(text) {
+      const li = document.createElement("li");
+      li.textContent = text;
+      adviceList.appendChild(li);
+    }
+
+    function makeAdvice(values, carbons, total, averageTotal) {
+      adviceList.innerHTML = "";
+
+      const carbonItems = [
+        { name: "전기", carbon: carbons.electricity },
+        { name: "도시가스", carbon: carbons.gas },
+        { name: "대중교통", carbon: carbons.publicTransport },
+        { name: "자가용", carbon: carbons.car }
+      ];
+
+      carbonItems.sort((a, b) => b.carbon - a.carbon);
+      const biggest = carbonItems[0];
+
+      if (total > averageTotal) {
+        addAdvice(`전체 탄소 배출량이 평균 예상값보다 높습니다. 특히 '${biggest.name}' 항목의 배출량이 가장 크므로 이 부분부터 줄이는 것이 효과적입니다.`);
+      } else {
+        addAdvice("전체 탄소 배출량이 평균 예상값 이하입니다. 현재 생활 습관을 유지하면서 조금씩 더 줄여보세요.");
+      }
+
+      if (values.electricity > AVERAGES.electricity) {
+        addAdvice("전기 사용량이 평균보다 높습니다. 에어컨은 26℃ 이상, 난방은 20℃ 이하로 설정해 보세요.");
+        addAdvice("사용하지 않는 충전기, TV, 컴퓨터, 멀티탭 전원을 꺼서 대기전력을 줄여 보세요.");
+        addAdvice("냉장고 문을 자주 열지 않고, 세탁기는 빨래를 모아서 한 번에 돌리면 전기 사용량을 줄일 수 있습니다.");
+      }
+
+      if (values.gas > AVERAGES.gas) {
+        addAdvice("도시가스 사용량이 평균보다 높습니다. 보일러 온도를 1~2℃ 낮추고 외출할 때는 외출 모드를 사용해 보세요.");
+        addAdvice("샤워 시간을 5분 줄이고, 설거지할 때 온수를 계속 틀어두지 않으면 도시가스 사용량을 줄일 수 있습니다.");
+        addAdvice("창문 틈을 막고 두꺼운 커튼이나 문풍지를 사용하면 난방 효율을 높일 수 있습니다.");
+      }
+
+      if (values.car > AVERAGES.car) {
+        addAdvice("자가용 이용 거리가 평균보다 높습니다. 가까운 거리는 걷기나 자전거를 이용하고, 등하교나 학원 이동은 대중교통 이용을 늘려보세요.");
+        addAdvice("자가용을 꼭 이용해야 한다면 가족이나 친구와 함께 이동하는 카풀을 활용해 1인당 배출량을 줄일 수 있습니다.");
+        addAdvice("급출발과 급제동을 줄이고, 타이어 공기압을 적정하게 유지하면 연료 사용량과 온실가스 배출량을 줄일 수 있습니다.");
+      }
+
+      if (values.publicTransport > AVERAGES.publicTransport) {
+        addAdvice("대중교통 이용 거리가 평균보다 높습니다. 대중교통은 자가용보다 탄소 배출이 적은 편이지만, 짧은 거리는 걷기나 자전거로 바꾸면 더 줄일 수 있습니다.");
+      }
+
+      if (
+        values.electricity <= AVERAGES.electricity &&
+        values.gas <= AVERAGES.gas &&
+        values.car <= AVERAGES.car
+      ) {
+        addAdvice("전기, 도시가스, 자가용 사용량이 평균 이하입니다. 앞으로도 대기전력 줄이기, 짧은 거리 걷기, 재사용 습관을 꾸준히 실천해 보세요.");
+      }
+    }
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      const electricity = Number(document.getElementById("electricity").value) || 0;
-      const gas = Number(document.getElementById("gas").value) || 0;
-      const publicTransport = Number(document.getElementById("publicTransport").value) || 0;
-      const car = Number(document.getElementById("car").value) || 0;
-
-      const electricityCarbon = electricity * emissionFactor.electricity;
-      const gasCarbon = gas * emissionFactor.gas;
-      const publicTransportCarbon = publicTransport * emissionFactor.publicTransport;
-      const carCarbon = car * emissionFactor.car;
-
-      const totalCarbon =
-        electricityCarbon +
-        gasCarbon +
-        publicTransportCarbon +
-        carCarbon;
-
-      if (totalCarbon === 0) {
-        alert("계산할 값을 하나 이상 입력해 주세요!");
-        return;
-      }
-
-      const data = {
-        electricity,
-        gas,
-        publicTransport,
-        car,
-        electricityCarbon,
-        gasCarbon,
-        publicTransportCarbon,
-        carCarbon,
-        totalCarbon
+      const values = {
+        electricity: getValue("electricity"),
+        gas: getValue("gas"),
+        publicTransport: getValue("publicTransport"),
+        car: getValue("car")
       };
 
-      updateResultText(data);
-      showTotalComparison(data.totalCarbon);
-      showDetailComparison(data);
-      showTips(data);
-      drawChart(data);
+      const carbons = {
+        electricity: values.electricity * FACTORS.electricity,
+        gas: values.gas * FACTORS.gas,
+        publicTransport: values.publicTransport * FACTORS.publicTransport,
+        car: values.car * FACTORS.car
+      };
 
-      resultBox.classList.add("show");
+      const total =
+        carbons.electricity +
+        carbons.gas +
+        carbons.publicTransport +
+        carbons.car;
 
+      const averageTotal =
+        AVERAGES.electricity * FACTORS.electricity +
+        AVERAGES.gas * FACTORS.gas +
+        AVERAGES.publicTransport * FACTORS.publicTransport +
+        AVERAGES.car * FACTORS.car;
+
+      totalCarbon.textContent = formatNumber(total);
+      electricityResult.textContent = formatNumber(carbons.electricity);
+      gasResult.textContent = formatNumber(carbons.gas);
+      publicResult.textContent = formatNumber(carbons.publicTransport);
+      carResult.textContent = formatNumber(carbons.car);
+
+      if (total > averageTotal) {
+        overallStatus.textContent = `평균 예상 배출량 ${formatNumber(averageTotal)}kg보다 높습니다`;
+        overallStatus.className = "overall-status status-high";
+      } else {
+        overallStatus.textContent = `평균 예상 배출량 ${formatNumber(averageTotal)}kg 이하입니다`;
+        overallStatus.className = "overall-status status-low";
+      }
+
+      compareGrid.innerHTML =
+        createCompareCard("전기 사용량", values.electricity, AVERAGES.electricity, "kWh") +
+        createCompareCard("도시가스 사용량", values.gas, AVERAGES.gas, "m³") +
+        createCompareCard("대중교통 이용 거리", values.publicTransport, AVERAGES.publicTransport, "km") +
+        createCompareCard("자가용 이용 거리", values.car, AVERAGES.car, "km");
+
+      makeAdvice(values, carbons, total, averageTotal);
+
+      if (total > averageTotal) {
+        message.textContent =
+          "나의 탄소 발자국이 평균보다 높게 나왔습니다. 가장 많이 배출되는 항목부터 하나씩 줄이면 효과적으로 탄소 배출을 줄일 수 있습니다.";
+      } else {
+        message.textContent =
+          "나의 탄소 발자국이 평균 이하로 나왔습니다. 지금처럼 에너지 절약과 대중교통 이용을 꾸준히 실천해 보세요.";
+      }
+
+      resultBox.style.display = "block";
       resultBox.scrollIntoView({
         behavior: "smooth",
         block: "nearest"
       });
     });
-
-    function updateResultText(data) {
-      totalCarbonText.textContent = data.totalCarbon.toFixed(2);
-      electricityResult.textContent = data.electricityCarbon.toFixed(2) + " kg";
-      gasResult.textContent = data.gasCarbon.toFixed(2) + " kg";
-      publicResult.textContent = data.publicTransportCarbon.toFixed(2) + " kg";
-      carResult.textContent = data.carCarbon.toFixed(2) + " kg";
-    }
-
-    function showTotalComparison(totalCarbon) {
-      comparisonBox.className = "comparison-box";
-
-      if (totalCarbon > averageCarbon * 1.1) {
-        comparisonBox.classList.add("high");
-        comparisonBox.innerHTML = `
-          평균보다 탄소 배출량이 높은 편입니다. ⚠️<br>
-          내 배출량: ${totalCarbon.toFixed(2)} kg CO2eq /
-          평균 기준: ${averageCarbon.toFixed(2)} kg CO2eq
-        `;
-      } else if (totalCarbon < averageCarbon * 0.9) {
-        comparisonBox.classList.add("low");
-        comparisonBox.innerHTML = `
-          평균보다 탄소 배출량이 낮은 편입니다. 아주 좋아요! 🌱<br>
-          내 배출량: ${totalCarbon.toFixed(2)} kg CO2eq /
-          평균 기준: ${averageCarbon.toFixed(2)} kg CO2eq
-        `;
-      } else {
-        comparisonBox.classList.add("normal");
-        comparisonBox.innerHTML = `
-          평균과 비슷한 탄소 배출량입니다. 🙂<br>
-          내 배출량: ${totalCarbon.toFixed(2)} kg CO2eq /
-          평균 기준: ${averageCarbon.toFixed(2)} kg CO2eq
-        `;
-      }
-    }
-
-    function showDetailComparison(data) {
-      const items = [
-        {
-          name: "전기",
-          userValue: data.electricity,
-          averageValue: averageUsage.electricity,
-          unit: "kWh"
-        },
-        {
-          name: "도시가스",
-          userValue: data.gas,
-          averageValue: averageUsage.gas,
-          unit: "m³"
-        },
-        {
-          name: "대중교통",
-          userValue: data.publicTransport,
-          averageValue: averageUsage.publicTransport,
-          unit: "km"
-        },
-        {
-          name: "자가용",
-          userValue: data.car,
-          averageValue: averageUsage.car,
-          unit: "km"
-        }
-      ];
-
-      detailComparison.innerHTML = items.map(function (item) {
-        const status = getStatus(item.userValue, item.averageValue);
-
-        return `
-          <div class="detail-row">
-            <div>
-              <strong>${item.name}</strong>:
-              내 사용량 ${item.userValue.toFixed(1)}${item.unit} /
-              평균 ${item.averageValue}${item.unit}
-            </div>
-            <span class="status ${status.className}">${status.text}</span>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function getStatus(userValue, averageValue) {
-      if (userValue > averageValue * 1.1) {
-        return {
-          text: "평균보다 높음",
-          className: "high"
-        };
-      }
-
-      if (userValue < averageValue * 0.9) {
-        return {
-          text: "평균보다 낮음",
-          className: "low"
-        };
-      }
-
-      return {
-        text: "평균과 비슷함",
-        className: "normal"
-      };
-    }
-
-    function showTips(data) {
-      const tips = [];
-
-      if (data.electricity > averageUsage.electricity) {
-        tips.push("전기 사용량이 평균보다 높아요. 사용하지 않는 조명 끄기, 멀티탭 전원 차단, LED 조명 사용을 실천해 보세요.");
-      }
-
-      if (data.gas > averageUsage.gas) {
-        tips.push("도시가스 사용량이 평균보다 높아요. 난방 온도를 1~2도 낮추고, 창문 틈새 단열을 해보세요.");
-      }
-
-      if (data.publicTransport > averageUsage.publicTransport) {
-        tips.push("대중교통 이용 거리가 평균보다 많아요. 가까운 거리는 걷기나 자전거 이용을 함께 실천하면 더 좋아요.");
-      }
-
-      if (data.car > averageUsage.car) {
-        tips.push("자가용 이용 거리가 평균보다 높아요. 개인 차량 대신 대중교통, 걷기, 자전거, 카풀을 활용해 보세요.");
-      }
-
-      const carbonList = [
-        { name: "전기", value: data.electricityCarbon },
-        { name: "도시가스", value: data.gasCarbon },
-        { name: "대중교통", value: data.publicTransportCarbon },
-        { name: "자가용", value: data.carCarbon }
-      ];
-
-      carbonList.sort(function (a, b) {
-        return b.value - a.value;
-      });
-
-      const highest = carbonList[0];
-
-      if (highest.value > 0) {
-        tips.push(`이번 계산에서 가장 큰 비중을 차지한 항목은 '${highest.name}'입니다. 이 항목부터 줄이면 가장 효과적이에요.`);
-      }
-
-      if (tips.length === 0) {
-        tipsBox.innerHTML = `
-          <h3>생활 실천 팁</h3>
-          <ul>
-            <li>현재 사용량은 평균보다 높지 않아요. 지금처럼 친환경 생활 습관을 유지해 보세요.</li>
-            <li>가까운 거리는 걷거나 자전거를 이용하면 탄소 배출량을 더 줄일 수 있어요.</li>
-            <li>전기 플러그를 뽑고, 냉난방 온도를 적절히 조절하는 습관도 도움이 됩니다.</li>
-          </ul>
-        `;
-      } else {
-        tipsBox.innerHTML = `
-          <h3>탄소 발자국 줄이는 방법</h3>
-          <ul>
-            ${tips.map(function (tip) {
-              return `<li>${tip}</li>`;
-            }).join("")}
-          </ul>
-        `;
-      }
-    }
-
-    function drawChart(data) {
-      if (typeof Chart === "undefined") {
-        chartWarning.style.display = "block";
-        return;
-      }
-
-      chartWarning.style.display = "none";
-
-      const chartData = [
-        data.electricityCarbon,
-        data.gasCarbon,
-        data.publicTransportCarbon,
-        data.carCarbon
-      ];
-
-      if (carbonChart) {
-        carbonChart.destroy();
-      }
-
-      carbonChart = new Chart(chartCanvas, {
-        type: "doughnut",
-        data: {
-          labels: ["전기", "도시가스", "대중교통", "자가용"],
-          datasets: [
-            {
-              data: chartData,
-              backgroundColor: [
-                "#22b86f",
-                "#39a9db",
-                "#8bd450",
-                "#278ee8"
-              ],
-              borderColor: "#ffffff",
-              borderWidth: 4,
-              hoverOffset: 10
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          cutout: "62%",
-          plugins: {
-            legend: {
-              position: "bottom",
-              labels: {
-                padding: 18,
-                font: {
-                  size: 13,
-                  weight: "bold"
-                }
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  const value = context.raw;
-                  const percentage = ((value / data.totalCarbon) * 100).toFixed(1);
-                  return `${context.label}: ${value.toFixed(2)} kg CO2eq (${percentage}%)`;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
   </script>
 </body>
 </html>
