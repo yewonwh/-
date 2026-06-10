@@ -19,9 +19,9 @@
       min-height: 100vh;
       font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(64, 200, 120, 0.25), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(39, 142, 232, 0.25), transparent 35%),
-        linear-gradient(135deg, #dff8e6 0%, #d9f1ff 100%);
+        radial-gradient(circle at top left, rgba(46, 204, 113, 0.25), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(52, 152, 219, 0.25), transparent 35%),
+        linear-gradient(135deg, #dff8e6, #d9f1ff);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -35,12 +35,11 @@
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 30px;
       padding: 38px;
       box-shadow: 0 22px 50px rgba(38, 115, 91, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
     }
 
     .header {
@@ -61,9 +60,9 @@
 
     h1 {
       font-size: 35px;
-      line-height: 1.25;
       color: #123c34;
       margin-bottom: 12px;
+      line-height: 1.25;
     }
 
     .subtitle {
@@ -155,10 +154,6 @@
       color: #6b8a82;
     }
 
-    .button-area {
-      margin-top: 8px;
-    }
-
     button {
       width: 100%;
       border: none;
@@ -179,18 +174,25 @@
     }
 
     .result {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(18px);
-      transition: 0.45s ease;
+      display: none;
+      margin-top: 30px;
+      animation: fadeIn 0.45s ease;
     }
 
     .result.show {
-      max-height: 1200px;
-      opacity: 1;
-      transform: translateY(0);
-      margin-top: 30px;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .result-inner {
@@ -213,7 +215,7 @@
       font-weight: 900;
       line-height: 1.4;
       color: #123c34;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .result-text span {
@@ -230,6 +232,17 @@
     .chart-box {
       max-width: 370px;
       margin: 0 auto;
+    }
+
+    .chart-warning {
+      display: none;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #fff7ed;
+      color: #b45309;
+      font-size: 14px;
+      font-weight: 700;
     }
 
     .comparison-box {
@@ -281,6 +294,33 @@
       font-size: 15px;
     }
 
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .summary-item {
+      background: white;
+      border: 1px solid #dbeee7;
+      border-radius: 16px;
+      padding: 14px 10px;
+    }
+
+    .summary-item strong {
+      display: block;
+      color: #1d5f4a;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .summary-item span {
+      font-size: 14px;
+      font-weight: 800;
+      color: #278ee8;
+    }
+
     .footer-note {
       text-align: center;
       margin-top: 18px;
@@ -326,6 +366,10 @@
 
       .result-text {
         font-size: 22px;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
@@ -394,9 +438,7 @@
           </div>
         </section>
 
-        <div class="button-area">
-          <button type="submit">나의 탄소 발자국 계산하기</button>
-        </div>
+        <button type="submit">나의 탄소 발자국 계산하기</button>
       </form>
 
       <section class="result" id="resultBox">
@@ -410,11 +452,34 @@
 
           <p class="average-note">
             평균 비교 기준은 수행평가용 예시값입니다.
-            선생님이 다른 기준을 제시하면 코드의 평균값만 수정하면 됩니다.
+            다른 기준이 있다면 JavaScript의 averageUsage 숫자만 수정하면 됩니다.
           </p>
 
           <div class="chart-box">
             <canvas id="carbonChart"></canvas>
+          </div>
+
+          <p class="chart-warning" id="chartWarning">
+            그래프 라이브러리를 불러오지 못했지만, 계산 결과와 분석은 정상 표시됩니다.
+          </p>
+
+          <div class="summary-grid">
+            <div class="summary-item">
+              <strong>전기</strong>
+              <span id="electricityResult">0 kg</span>
+            </div>
+            <div class="summary-item">
+              <strong>도시가스</strong>
+              <span id="gasResult">0 kg</span>
+            </div>
+            <div class="summary-item">
+              <strong>대중교통</strong>
+              <span id="publicResult">0 kg</span>
+            </div>
+            <div class="summary-item">
+              <strong>자가용</strong>
+              <span id="carResult">0 kg</span>
+            </div>
           </div>
 
           <div class="comparison-box" id="comparisonBox"></div>
@@ -433,19 +498,19 @@
     const form = document.getElementById("carbonForm");
     const resultBox = document.getElementById("resultBox");
     const totalCarbonText = document.getElementById("totalCarbon");
-    const chartCanvas = document.getElementById("carbonChart");
+
+    const electricityResult = document.getElementById("electricityResult");
+    const gasResult = document.getElementById("gasResult");
+    const publicResult = document.getElementById("publicResult");
+    const carResult = document.getElementById("carResult");
+
     const comparisonBox = document.getElementById("comparisonBox");
     const tipsBox = document.getElementById("tipsBox");
+    const chartCanvas = document.getElementById("carbonChart");
+    const chartWarning = document.getElementById("chartWarning");
 
     let carbonChart = null;
 
-    /*
-      탄소 배출 계수
-      전기: kWh × 0.4781
-      도시가스: m³ × 2.176
-      대중교통: km × 0.04
-      자가용: km × 0.19
-    */
     const emissionFactor = {
       electricity: 0.4781,
       gas: 2.176,
@@ -453,10 +518,6 @@
       car: 0.19
     };
 
-    /*
-      수행평가용 예시 평균 사용량
-      실제 학교 기준이나 지역 평균 자료가 있다면 아래 숫자만 바꾸면 됩니다.
-    */
     const averageUsage = {
       electricity: 250,
       gas: 30,
@@ -495,7 +556,11 @@
       }
 
       totalCarbonText.textContent = totalCarbon.toFixed(2);
-      resultBox.classList.add("show");
+
+      electricityResult.textContent = electricityCarbon.toFixed(2) + " kg";
+      gasResult.textContent = gasCarbon.toFixed(2) + " kg";
+      publicResult.textContent = publicTransportCarbon.toFixed(2) + " kg";
+      carResult.textContent = carCarbon.toFixed(2) + " kg";
 
       showComparison(totalCarbon);
       showTips({
@@ -516,6 +581,8 @@
         carCarbon,
         totalCarbon
       });
+
+      resultBox.classList.add("show");
 
       resultBox.scrollIntoView({
         behavior: "smooth",
@@ -576,7 +643,10 @@
         { name: "자가용", value: data.carCarbon }
       ];
 
-      carbonList.sort((a, b) => b.value - a.value);
+      carbonList.sort(function (a, b) {
+        return b.value - a.value;
+      });
+
       const highest = carbonList[0];
 
       if (highest.value > 0) {
@@ -596,13 +666,22 @@
         tipsBox.innerHTML = `
           <h3>탄소 발자국 줄이는 방법</h3>
           <ul>
-            ${tips.map(tip => `<li>${tip}</li>`).join("")}
+            ${tips.map(function (tip) {
+              return `<li>${tip}</li>`;
+            }).join("")}
           </ul>
         `;
       }
     }
 
     function drawChart(data) {
+      if (typeof Chart === "undefined") {
+        chartWarning.style.display = "block";
+        return;
+      }
+
+      chartWarning.style.display = "none";
+
       const chartData = [
         data.electricityCarbon,
         data.gasCarbon,
