@@ -32,7 +32,7 @@
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.85);
       border-radius: 30px;
       padding: 44px;
@@ -173,6 +173,99 @@
       color: #7b918b;
       font-size: 12px;
       line-height: 1.4;
+    }
+
+    .chart-box {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #dcefe7;
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .donut-chart {
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      position: relative;
+      margin: 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+    }
+
+    .donut-chart::after {
+      content: "";
+      position: absolute;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      background: #ffffff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 1px #e4f0ec;
+    }
+
+    .donut-center {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .donut-center strong {
+      display: block;
+      font-size: 23px;
+      color: #0f4c3a;
+    }
+
+    .donut-center span {
+      font-size: 12px;
+      color: #718a84;
+    }
+
+    .chart-info h3 {
+      font-size: 19px;
+      color: #164c3f;
+      margin-bottom: 8px;
+    }
+
+    .chart-info p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #647d76;
+      margin-bottom: 16px;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px;
+      border-radius: 14px;
+      background: #f8fbfa;
+      border: 1px solid #e4f0ec;
+      font-size: 13px;
+      color: #4f6d66;
+      font-weight: 800;
+    }
+
+    .legend-color {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .bar-box {
@@ -605,13 +698,6 @@
       line-height: 1.75;
     }
 
-    .notice {
-      margin-top: 14px;
-      font-size: 12px;
-      line-height: 1.6;
-      color: #7b918b;
-    }
-
     @media (max-width: 860px) {
       body {
         align-items: flex-start;
@@ -640,6 +726,24 @@
         width: 100%;
       }
 
+      .chart-box {
+        grid-template-columns: 1fr;
+      }
+
+      .legend-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .donut-chart {
+        width: 210px;
+        height: 210px;
+      }
+
+      .donut-chart::after {
+        width: 104px;
+        height: 104px;
+      }
+
       .form-section {
         padding: 22px;
       }
@@ -665,7 +769,7 @@
         <h1>우리 동네 탄소 발자국 계산기</h1>
         <p>
           전기, 도시가스, 대중교통, 자가용 사용량을 입력하면 월간 온실가스 배출량을 계산하고,
-          2013~2023년 국가 온실가스 통계와 함께 나의 탄소 발자국을 비교할 수 있습니다.
+          국가 온실가스 통계와 함께 나의 탄소 발자국을 비교할 수 있습니다.
         </p>
       </div>
 
@@ -699,6 +803,24 @@
         </div>
 
         <div class="stat-grid" id="nationalStatGrid"></div>
+
+        <div class="chart-box">
+          <div class="donut-chart" id="donutChart">
+            <div class="donut-center">
+              <strong id="donutYear">2023</strong>
+              <span>부문 비중</span>
+            </div>
+          </div>
+
+          <div class="chart-info">
+            <h3>선택 연도 부문별 원형 그래프</h3>
+            <p id="chartDescription">
+              에너지, 산업공정, 농업, 폐기물 부문이 전체 온실가스 배출량에서 차지하는 비중입니다.
+            </p>
+
+            <div class="legend-grid" id="legendGrid"></div>
+          </div>
+        </div>
 
         <div class="bar-box">
           <h3>선택 연도 부문별 배출량 비중</h3>
@@ -821,28 +943,17 @@
       <section class="source-box">
         <h3>자료 및 계산 기준</h3>
         <ul>
-          <li>2013~2023년 온실가스 총배출량, 에너지, 산업공정, 농업, 폐기물, GDP 대비 배출량, 1인당 배출량 값을 코드에 반영했습니다.</li>
+          <li>2013~2023년 온실가스 총배출량, 에너지, 산업공정, 농업, 폐기물, GDP 대비 배출량, 1인당 배출량 값을 반영했습니다.</li>
           <li>전기 배출계수: 0.4173 kg CO₂eq/kWh</li>
           <li>전기 평균 비교 기준: 서울시 가구당 전력소비량 2024년 296kWh/월</li>
           <li>2023년 1인당 온실가스 배출량 13.7톤 CO₂eq/인을 월 단위로 환산해 전체 결과 비교에 활용했습니다.</li>
+          <li>참고 기관: 온실가스종합정보센터, 한국가스공사, 서울특별시 에너지정보, 국토교통부, 한국교통연구원</li>
         </ul>
-
-        <p class="notice">
-          ※ 도시가스, 대중교통, 자가용 배출계수는 계산 기능 구현을 위한 기본값입니다.
-          실제 공식 산정에서는 연료 종류, 차량 종류, 연비, 지역 등에 따라 달라질 수 있습니다.
-        </p>
       </section>
     </section>
   </main>
 
   <script>
-    /*
-      이미지 표의 2013~2023년 값을 모두 입력한 데이터
-      단위:
-      - total, energy, industrial, agriculture, waste: 백만 톤 CO₂eq.
-      - gdpIntensity: 톤 CO₂eq./십억 원
-      - perCapita: 톤 CO₂eq./인
-    */
     const NATIONAL_DATA = [
       { year: 2013, total: 727.5, energy: 572.5, industrial: 111.5, agriculture: 23.8, waste: 19.8, gdpIntensity: 420.0, perCapita: 14.4 },
       { year: 2014, total: 722.6, energy: 563.9, industrial: 115.6, agriculture: 23.9, waste: 19.2, gdpIntensity: 404.2, perCapita: 14.2 },
@@ -857,10 +968,6 @@
       { year: 2023, total: 707.2, energy: 545.0, industrial: 121.5, agriculture: 22.5, waste: 18.2, gdpIntensity: 314.7, perCapita: 13.7 }
     ];
 
-    /*
-      생활 탄소 발자국 계산용 배출계수
-      전기: 0.4173 kg CO₂eq/kWh
-    */
     const FACTORS = {
       electricity: 0.4173,
       gas: 2.18,
@@ -868,10 +975,6 @@
       car: 0.192
     };
 
-    /*
-      평균 사용량 비교 기준
-      전기 296kWh는 조사 자료의 서울시 가구당 월평균 전력소비량 기준
-    */
     const AVERAGES = {
       electricity: 296,
       gas: 30,
@@ -879,10 +982,21 @@
       car: 200
     };
 
+    const SECTOR_COLORS = {
+      energy: "#20c779",
+      industrial: "#1e9bff",
+      agriculture: "#f2c94c",
+      waste: "#ff8a65"
+    };
+
     const yearSelect = document.getElementById("yearSelect");
     const nationalStatGrid = document.getElementById("nationalStatGrid");
     const sectorBars = document.getElementById("sectorBars");
     const nationalTable = document.getElementById("nationalTable");
+    const donutChart = document.getElementById("donutChart");
+    const donutYear = document.getElementById("donutYear");
+    const legendGrid = document.getElementById("legendGrid");
+    const chartDescription = document.getElementById("chartDescription");
 
     const form = document.getElementById("carbonForm");
     const resultBox = document.getElementById("resultBox");
@@ -951,6 +1065,45 @@
         </div>
       `;
 
+      renderDonutChart(data);
+      renderSectorBars(data);
+    }
+
+    function renderDonutChart(data) {
+      const sectors = [
+        { name: "에너지", key: "energy", value: data.energy, color: SECTOR_COLORS.energy },
+        { name: "산업공정", key: "industrial", value: data.industrial, color: SECTOR_COLORS.industrial },
+        { name: "농업", key: "agriculture", value: data.agriculture, color: SECTOR_COLORS.agriculture },
+        { name: "폐기물", key: "waste", value: data.waste, color: SECTOR_COLORS.waste }
+      ];
+
+      let current = 0;
+      const gradientParts = sectors.map((sector) => {
+        const start = current;
+        const percent = (sector.value / data.total) * 100;
+        current += percent;
+        return `${sector.color} ${start}% ${current}%`;
+      });
+
+      donutChart.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+      donutYear.textContent = data.year;
+
+      chartDescription.textContent =
+        `${data.year}년 총배출량은 ${formatNumber(data.total)}백만 톤 CO₂eq.이며, 에너지 부문이 전체의 ${formatNumber((data.energy / data.total) * 100)}%로 가장 큰 비중을 차지합니다.`;
+
+      legendGrid.innerHTML = sectors.map((sector) => {
+        const percent = (sector.value / data.total) * 100;
+
+        return `
+          <div class="legend-item">
+            <span class="legend-color" style="background:${sector.color};"></span>
+            <span>${sector.name} ${formatNumber(percent)}%</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderSectorBars(data) {
       const sectors = [
         { name: "에너지", value: data.energy },
         { name: "산업공정", value: data.industrial },
@@ -1132,11 +1285,6 @@
 
       const latestNationalData = getLatestNationalData();
 
-      /*
-        2023년 1인당 온실가스 배출량 13.7톤 CO₂eq./인을
-        kg 단위 월평균으로 환산
-        13.7톤 × 1000kg ÷ 12개월 = 약 1141.7kg/월
-      */
       const nationalMonthlyAverage =
         latestNationalData.perCapita * 1000 / 12;
 
