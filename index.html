@@ -901,6 +901,21 @@
           <div class="overall-status" id="overallStatus">평균과 비교 결과</div>
         </div>
 
+        <div class="chart-box" style="margin-bottom: 24px;">
+          <div class="donut-chart" id="myDonutChart">
+            <div class="donut-center">
+              <strong id="myDonutTotal">0</strong>
+              <span>kg CO₂eq</span>
+            </div>
+          </div>
+
+          <div class="chart-info">
+            <h3>나의 부문별 탄소 배출 비중</h3>
+            <p>입력하신 사용량을 바탕으로 계산된 부문별 탄소 배출 비율입니다. 어느 항목에서 탄소가 많이 발생하는지 한눈에 확인해 보세요.</p>
+            <div class="legend-grid" id="myLegendGrid"></div>
+          </div>
+        </div>
+
         <div class="result-grid">
           <div class="result-item">
             <b>전기</b>
@@ -1002,6 +1017,12 @@
     const resultBox = document.getElementById("resultBox");
 
     const totalCarbon = document.getElementById("totalCarbon");
+    
+    // 새롭게 추가된 요소들
+    const myDonutChart = document.getElementById("myDonutChart");
+    const myDonutTotal = document.getElementById("myDonutTotal");
+    const myLegendGrid = document.getElementById("myLegendGrid");
+
     const electricityResult = document.getElementById("electricityResult");
     const gasResult = document.getElementById("gasResult");
     const publicResult = document.getElementById("publicResult");
@@ -1094,6 +1115,44 @@
       legendGrid.innerHTML = sectors.map((sector) => {
         const percent = (sector.value / data.total) * 100;
 
+        return `
+          <div class="legend-item">
+            <span class="legend-color" style="background:${sector.color};"></span>
+            <span>${sector.name} ${formatNumber(percent)}%</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // 내 사용량 원형 그래프 렌더링 함수 추가
+    function renderMyDonutChart(carbons, total) {
+      if (total === 0) {
+        myDonutChart.style.background = "#e4f0ec";
+        myLegendGrid.innerHTML = "";
+        myDonutTotal.textContent = "0";
+        return;
+      }
+
+      const mySectors = [
+        { name: "전기", value: carbons.electricity, color: "#20c779" },
+        { name: "도시가스", value: carbons.gas, color: "#1e9bff" },
+        { name: "대중교통", value: carbons.publicTransport, color: "#f2c94c" },
+        { name: "자가용", value: carbons.car, color: "#ff8a65" }
+      ];
+
+      let current = 0;
+      const gradientParts = mySectors.map((sector) => {
+        const start = current;
+        const percent = (sector.value / total) * 100;
+        current += percent;
+        return `${sector.color} ${start}% ${current}%`;
+      });
+
+      myDonutChart.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+      myDonutTotal.textContent = formatNumber(total);
+
+      myLegendGrid.innerHTML = mySectors.map((sector) => {
+        const percent = (sector.value / total) * 100;
         return `
           <div class="legend-item">
             <span class="legend-color" style="background:${sector.color};"></span>
@@ -1289,6 +1348,10 @@
         latestNationalData.perCapita * 1000 / 12;
 
       totalCarbon.textContent = formatNumber(total);
+      
+      // 내 원형 그래프 업데이트 호출
+      renderMyDonutChart(carbons, total);
+
       electricityResult.textContent = formatNumber(carbons.electricity);
       gasResult.textContent = formatNumber(carbons.gas);
       publicResult.textContent = formatNumber(carbons.publicTransport);
