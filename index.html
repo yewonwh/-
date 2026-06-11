@@ -1385,7 +1385,7 @@
       carResult.textContent = formatNumber(carbons.car);
 
       if (total > nationalMonthlyAverage) {
-        overallStatus.textContent = `2023년 1인당 월평균 환산값 ${formatNumber(nationalMonthlyAverage)}kg 이하입니다`; // 사진에 맞춰 텍스트 변경
+        overallStatus.textContent = `2023년 1인당 월평균 환산값 ${formatNumber(nationalMonthlyAverage)}kg 초과입니다`; // 사진에 맞춰 텍스트 변경
         overallStatus.className = "overall-status status-high";
       } else {
         overallStatus.textContent = `2023년 1인당 월평균 환산값 ${formatNumber(nationalMonthlyAverage)}kg 이하입니다`;
